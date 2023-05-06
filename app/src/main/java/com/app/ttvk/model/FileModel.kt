@@ -5,5 +5,4 @@ data class FileModel(
     val size: Long,
     val date: Long,
     val path: String,
-    val icon: Int
 )
