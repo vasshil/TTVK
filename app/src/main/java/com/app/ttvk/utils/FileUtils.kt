@@ -14,15 +14,17 @@ import kotlin.math.pow
 
 object FileUtils {
 
-    var currentDirectory: File = Environment.getExternalStorageDirectory()
+    private var currentDirectory: File = Environment.getExternalStorageDirectory()
 
     var files: MutableList<FileModel>
+
+    var sortType = SortType.BY_NAME
 
     init {
 
         files = getFiles(currentDirectory)
 
-        sortFiles(SortType.BY_NAME)
+        sortFiles(sortType)
 
 
     }
@@ -42,7 +44,6 @@ object FileUtils {
         return fileModels
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun sortFiles(by: SortType) {
         when(by) {
             SortType.BY_NAME -> files.sortBy {
@@ -56,6 +57,15 @@ object FileUtils {
             }
         }
     }
+
+    fun selectCurrentDirectory(path: String) {
+        currentDirectory = File(path + "/")
+
+        files = getFiles(currentDirectory)
+        sortFiles(sortType)
+
+    }
+
 
     fun formatSize(size: Long): String {
         if (size == 0L) return "0 б"

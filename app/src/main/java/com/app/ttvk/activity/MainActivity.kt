@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
 //        GlobalScope.launch {
 
-        adapter = FileAdapter(fileUtils.files)
+        adapter = FileAdapter()
         val linearLayoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
 
         binding.filesRecycler.adapter = adapter
