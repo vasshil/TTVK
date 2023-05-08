@@ -24,8 +24,11 @@ class FileAdapter() : RecyclerView.Adapter<FileAdapter.FileViewHolder>() {
         holder.bind(file)
 
         holder.binding.root.setOnClickListener {
-            FileUtils.selectCurrentDirectory(file.path)
-            notifyDataSetChanged()
+            if (file.getFile().isDirectory) {
+                FileUtils.selectCurrentDirectory(file.path)
+                notifyDataSetChanged()
+            }
+
         }
 
     }

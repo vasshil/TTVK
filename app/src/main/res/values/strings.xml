@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TTVK</string>
+    
+    <string-array name="sort_types">
+        <item>По названию</item>
+        <item>По размеру</item>
+        <item>По дате</item>
+    </string-array>
 </resources>

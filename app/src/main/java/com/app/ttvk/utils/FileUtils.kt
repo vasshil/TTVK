@@ -24,7 +24,7 @@ object FileUtils {
 
         files = getFiles(currentDirectory)
 
-        sortFiles(sortType)
+        sortFiles()
 
 
     }
@@ -44,7 +44,7 @@ object FileUtils {
         return fileModels
     }
 
-    private fun sortFiles(by: SortType) {
+    fun sortFiles(by: SortType = sortType) {
         when(by) {
             SortType.BY_NAME -> files.sortBy {
                 it.name
@@ -62,7 +62,17 @@ object FileUtils {
         currentDirectory = File(path + "/")
 
         files = getFiles(currentDirectory)
-        sortFiles(sortType)
+        sortFiles()
+
+    }
+
+    fun selectPreviousDirectory() {
+        val previousDirectory = currentDirectory.parentFile
+        if (previousDirectory != null) {
+            if (previousDirectory.startsWith(Environment.getExternalStorageDirectory().absolutePath)) {
+                selectCurrentDirectory(previousDirectory.absolutePath)
+            }
+        }
 
     }
 

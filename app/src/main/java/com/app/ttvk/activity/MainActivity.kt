@@ -3,19 +3,22 @@ package com.app.ttvk.activity
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.ttvk.R
 import com.app.ttvk.databinding.ActivityMainBinding
-import com.app.ttvk.model.FileModel
 import com.app.ttvk.recycler.FileAdapter
 import com.app.ttvk.utils.FileUtils
 import com.app.ttvk.utils.SortType
-import java.io.File
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val fileUtils = FileUtils
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -32,7 +36,6 @@ class MainActivity : AppCompatActivity() {
 
         checkPermissions()
 
-//        GlobalScope.launch {
 
         adapter = FileAdapter()
         val linearLayoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
@@ -40,7 +43,32 @@ class MainActivity : AppCompatActivity() {
         binding.filesRecycler.adapter = adapter
         binding.filesRecycler.layoutManager = linearLayoutManager
 
-//        }
+
+        val spinnerAdapter = ArrayAdapter.createFromResource(this, com.app.ttvk.R.array.sort_types, com.app.ttvk.R.layout.spinner_item)
+        spinnerAdapter.setDropDownViewResource(com.app.ttvk.R.layout.spinner_item)
+        binding.sortTypeSelector.adapter = spinnerAdapter
+        binding.sortTypeSelector.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, itemSelected: View, selectedPosition: Int, selectedId: Long) {
+                    FileUtils.sortType = SortType.values()[selectedPosition]
+                    FileUtils.sortFiles()
+                    adapter!!.notifyDataSetChanged()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            }
+
+        binding.backButton.setOnClickListener {
+            FileUtils.selectPreviousDirectory()
+            adapter!!.notifyDataSetChanged()
+        }
+
+        binding.homeButton.setOnClickListener {
+            FileUtils.selectCurrentDirectory(Environment.getExternalStorageDirectory().absolutePath)
+            adapter!!.notifyDataSetChanged()
+        }
+
 
     }
 
